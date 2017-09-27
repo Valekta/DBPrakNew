@@ -15,9 +15,7 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 	public void getProfile(Long id) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
-			Query q = session.createQuery("select p from Person p where p.pid = :id");
-			q.setParameter("id", id);
-			Person person = (Person) q.getSingleResult();
+			Person person = selectPersonById(session, id);
 			DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
 			System.out.println("getProfil");
 			System.out.print("Name: " + person.getFirstName() + " " + person.getLastName() + "\n" 
@@ -46,9 +44,7 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 	public void getCommonInterestsOfMyFriends(Long id) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
-			Query q = session.createQuery("select p from Person p where p.pid = :id");
-			q.setParameter("id", id);
-			Person person = (Person) q.getSingleResult();
+			Person person = selectPersonById(session, id);
 			System.out.println("getCommonInterestsOfMyFriends");
 			Set<Tag> friendsInterests = new HashSet<Tag>();
 			for (Iterator<Person> it = person.getFriends().keySet().iterator(); it.hasNext(); ) {
@@ -67,12 +63,26 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 			System.out.print("\n");
 			session.close();
 		}
-		
 	}
 
 	public void getCommonFriends(Long id1, Long id2) {
-		// TODO Auto-generated method stub
-		
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			Person person1 = selectPersonById(session, id1);
+			Person person2 = selectPersonById(session, id2);
+			System.out.println("getCommonInterestsOfMyFriends");
+			for (Iterator<Person> it = person1.getFriends().keySet().iterator(); it.hasNext(); ) {
+				Person friend = it.next();
+				if(friend.getPid() != person1.getPid() && person2.getFriends().containsKey(friend)) {
+					System.out.println("Id: " + friend.getPid() + " Name: " + friend.getFirstName() + friend.getLastName());
+				}
+			}
+		} catch(Exception e) {
+				System.out.println(e);
+		} finally {
+			System.out.print("\n");
+			session.close();
+		}
 	}
 
 	public void getPersonsWithMostCommonInterests(Long id) {
@@ -90,4 +100,10 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 		
 	}
 
+	private Person selectPersonById(Session session, Long id) {
+		Query q = session.createQuery("select p from Person p where p.pid = :id");
+		q.setParameter("id", id);
+		Person person = (Person) q.getSingleResult();
+		return person;
+	}
 }
