@@ -1,5 +1,6 @@
 package db.util;
 
+import java.text.DateFormat;
 import javax.persistence.Query;
 
 import org.hibernate.Session;
@@ -13,9 +14,10 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 			Query q = session.createQuery("select p from Person p where p.pid = :id");
 			q.setParameter("id", id);
 			Person person = (Person) q.getSingleResult();
+			DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
 			System.out.println("getProfil");
 			System.out.print("Name: " + person.getFirstName() + " " + person.getLastName() + "\n" 
-					+ "Birthday: " + person.getBirthday() + "\n" + "Gender: " + person.getGender() + "\n" 
+					+ "Birthday: " + df.format(person.getBirthday().getTime()) + "\n" + "Gender: " + person.getGender() + "\n" 
 					+ "Location: " + person.getLocatedIn().getName() + ", " + person.getLocatedIn().getCountry().getName() + " ("
 					+ person.getLocatedIn().getCountry().getContinent().getName() + ")\n" +
 					"Languages: ");
