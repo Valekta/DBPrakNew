@@ -1,10 +1,14 @@
 package db.util;
 
 import java.text.DateFormat;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.persistence.Query;
 
 import org.hibernate.Session;
-import db.model.Person;
+import db.model.*;
 
 public class PersonRelatedImpl implements PersonRelatedAPI {
 
@@ -40,7 +44,29 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 	}
 
 	public void getCommonInterestsOfMyFriends(Long id) {
-		// TODO Auto-generated method stub
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			Query q = session.createQuery("select p from Person p where p.pid = :id");
+			q.setParameter("id", id);
+			Person person = (Person) q.getSingleResult();
+			System.out.println("getCommonInterestsOfMyFriends");
+			Set<Tag> friendsInterests = new HashSet<Tag>();
+			for (Iterator<Person> it = person.getFriends().keySet().iterator(); it.hasNext(); ) {
+				Person friend = it.next();
+				if(friend.getPid() != person.getPid()) {
+					friendsInterests.addAll(friend.getInterests());
+				}
+			}
+			for(Tag interest : friendsInterests) {
+				if(person.getInterests().contains(interest))
+					System.out.println("Id: " + interest.getId() + " Name: " + interest.getName());
+			}
+		} catch(Exception e) {
+				System.out.println(e);
+		} finally {
+			System.out.print("\n");
+			session.close();
+		}
 		
 	}
 
