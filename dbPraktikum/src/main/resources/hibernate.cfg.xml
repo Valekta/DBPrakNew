@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- Connection settings -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost/final</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">bardock30</property>
+
+        <!-- Print executed SQL to stdout -->
+        
+        
+        <property name="connection_pool_size">1</property>
+
+        <!-- Annotated entity classes -->
+        <mapping class="db.model.Tag"/>
+        <mapping class="db.model.TagClass"/>
+        <mapping class="db.model.Continent"/>
+        <mapping class="db.model.Country"/>
+        <mapping class="db.model.City"/>
+        <mapping class="db.model.University"/>
+        <mapping class="db.model.UniversityMembership"/>
+        <mapping class="db.model.Company"/>
+        <mapping class="db.model.CompanyMembership"/>
+        <mapping class="db.model.Person"/>
+        <mapping class="db.model.Forum"/>
+        <mapping class="db.model.Post"/>
+        <mapping class="db.model.Comment"/>
+    </session-factory>
+</hibernate-configuration>

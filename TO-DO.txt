@@ -1,0 +1,13 @@
+Zu allen Collections/Assoziationen cascade types festlegen oder berichtigen
+
+On Cascade und On Delete Optionen hinzufügen (Das ist das einzige, was noch nicht zu unserem Schema passt)
+
+Zu allen Collections/Assoziationen die fetch types berichtigen oder ergänzen
+
+Für Jede Tabelle INSERT, UPDATE und DELETE testen über Hibernate Schnittstellen (am besten mit unserer geladenen Datenbank aus der Aufgabe 1)
+
+Aufgabe 2A) anfangen
+
+Aufgabe 2B) anfangen
+
+(Wenn du noch eine Idee hast wie man Inheritance für die Assoziationen "likes" und "replyOf" nutzen kann, dann probier gerne nochmal, die Tabellen "COMMENTLIKES", "POSTLIKES" und "COMMENT" anders zu erzeugen. Die Tabellen sind momentan zwar richtig, aber in Person zwei Collections "postLikes" und "commentLikes" zu haben, ist irgendwie nicht so schön, finde ich.)
