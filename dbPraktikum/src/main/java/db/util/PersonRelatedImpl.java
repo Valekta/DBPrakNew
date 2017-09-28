@@ -3,6 +3,7 @@ package db.util;
 import java.text.DateFormat;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Query;
@@ -86,8 +87,38 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 	}
 
 	public void getPersonsWithMostCommonInterests(Long id) {
-		// TODO Auto-generated method stub
-		
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			Person person = selectPersonById(session, id);
+			Query q = session.createQuery("select p from Person p where p.pid != :id");
+			q.setParameter("id", id);
+			List<Person> personen = (List<Person>)q.getResultList();
+			System.out.println("getPersonsWithMostCommonInterests");
+			int mostCommonInterests = 0;
+			Set<Person> personWithMostCommonInterests = new HashSet<Person>();
+
+			for (Person p : personen) {
+				Set<Tag> tags = new HashSet<Tag>();
+				tags.addAll(person.getInterests());
+				tags.retainAll(p.getInterests());
+				if (tags.size() > mostCommonInterests) {
+					mostCommonInterests = tags.size();
+					personWithMostCommonInterests.clear();
+					personWithMostCommonInterests.add(p);
+				} else if (tags.size() == mostCommonInterests) {
+					personWithMostCommonInterests.add(p);
+				}
+			}
+			System.out.println("Gemeinsame Interessen: " + mostCommonInterests);
+			for (Person p : personWithMostCommonInterests) {
+				System.out.println("Id: " + p.getPid() + " Name: " + p.getFirstName() + " " + p.getLastName());
+			}
+		} catch(Exception e) {
+				System.out.println(e);
+		} finally {
+			System.out.print("\n");
+			session.close();
+		}
 	}
 
 	public void getJobRecommendation(Long id) {
