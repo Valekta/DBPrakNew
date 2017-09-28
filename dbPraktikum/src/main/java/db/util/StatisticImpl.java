@@ -44,7 +44,7 @@ public class StatisticImpl implements StatisticAPI {
 			}
 			for (Country c : countryMax) {
 				System.out.println("getMostPostingCountry");
-				System.out.println(c.getName() + " " + c.getMessagesById().size());
+                System.out.println("Country: " + c.getName() + "\n" + "Number of Posts: " + c.getMessagesById().size());
 			}
 			session.close();
 
