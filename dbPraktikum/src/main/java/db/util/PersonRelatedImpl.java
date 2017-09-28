@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.ParameterMode;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 
 import org.hibernate.Session;
 import db.model.*;
@@ -127,8 +129,43 @@ public class PersonRelatedImpl implements PersonRelatedAPI {
 	}
 
 	public void getShortestFriendshipPath(Long id1, Long id2) {
-		// TODO Auto-generated method stub
+		System.out.println("getShortestFriendshipPath");
+		if (id1 == id2) {
+			System.out.println("Die zwei IDs sollten unterschiedlich sein.");
+			return;
+		}
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		StoredProcedureQuery spq = session.createStoredProcedureQuery("returnShortestPath");
+		spq.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
+		spq.registerStoredProcedureParameter(2, Long.class, ParameterMode.IN);
+		spq.setParameter(1, id1);
+		spq.setParameter(2, id2);
+		String result = spq.getSingleResult().toString().replace("{", "");
+		result = result.replace("}", "");
+		String[] personIds = result.split(",");
+		try {
+			Person person = selectPersonById(session, id1);
+			System.out.println("getCommonInterestsOfMyFriends");
+			System.out.print(person.getFirstName() + " " + person.getLastName() + " <--> ");
+		} catch(Exception e) {
+				System.out.println(e);
+		} 
 		
+		int count = 1;
+		for (String id : personIds) {
+			try {
+				Person person = selectPersonById(session, Long.parseLong(id));
+				System.out.print(person.getFirstName() + " " + person.getLastName());
+			} catch(Exception e) {
+				System.out.println(e);
+			}
+			if (count != personIds.length) {
+				System.out.print(" <--> ");
+			}
+			count++;
+		}
+		System.out.println("");
+		session.close();
 	}
 
 	private Person selectPersonById(Session session, Long id) {
