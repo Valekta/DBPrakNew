@@ -16,8 +16,21 @@ public class StatisticImpl implements StatisticAPI {
 	}
 
 	public void getPopularComments(int k) {
-		// TODO Auto-generated method stub
-		
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            // select * from comment
+            Query q = session.createQuery("from Person");
+            List<Person> rl = q.getResultList();
+
+            for (Person p : rl) {
+                if (p.getCommentLikes().size() > k) {
+                    System.out.println(p.getFirstName() + " " + p.getLastName());
+                }
+            }
+        } finally {
+            System.out.print("\n");
+            session.close();
+        }
 	}
 
 	public void getMostPostingCountry() {
@@ -25,7 +38,7 @@ public class StatisticImpl implements StatisticAPI {
 
 		try {
 			// select * from country
-			Query query = session.createQuery("from COUNTRY" );
+			Query query = session.createQuery("from Country" );
 
 			List<Country> country = (List<Country>) query.list();
 
